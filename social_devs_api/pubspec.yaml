@@ -1,0 +1,29 @@
+name: social_devs_api
+description: Social Devs Api
+publish_to: none
+version: 1.0.0
+
+environment:
+  sdk: '>=2.17.6 <3.0.0'
+
+dependencies:
+  bcrypt: ^1.1.3
+  dart_jsonwebtoken: ^2.4.1
+  shelf: ^1.3.1
+  shelf_multipart: ^1.0.0
+  shelf_router: ^1.1.3
+  shelf_web_socket: ^1.0.2
+  email_validator: ^2.0.1
+  postgres: ^2.4.5
+  shelf_cors_headers: ^0.1.3
+  web_socket_channel: ^2.2.0
+
+  custom_environment:
+    path: ../packages/custom_environment
+
+  custom_events:
+    path: ../packages/custom_events  
+  image: ^3.2.0
+
+dev_dependencies:
+  lints: ^2.0.0

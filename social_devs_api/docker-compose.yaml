@@ -1,0 +1,34 @@
+version: '3.1'
+
+# volumes:
+#   postgres_data:
+
+services:
+  # postgres:
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_DB: socialdevs_dev
+  #     POSTGRES_USER: admin
+  #     POSTGRES_PASSWORD: Tih@667623
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+  # dart-server:
+  #   build: .
+  #   restart: always
+  #   ports:
+  #     - "80:3000"
+  #   entrypoint: ["/app/bin/server"]
+  #   env_file:
+  #     - .env
+
+  nginx-images:
+    image: nginx
+    ports:
+      - "5001:80"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+      - ../images:/data
