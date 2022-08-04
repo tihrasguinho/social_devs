@@ -55,9 +55,13 @@ FutureOr<Response> uploadUserImageRoute(Request request) async {
 
       final thumb = copyResizeCropSquare(original, 256);
 
-      await File('../images/$id-image.jpeg').writeAsBytes(encodeJpg(resized, quality: 85));
+      await File('./app/images/users/$id-image.jpeg').writeAsBytes(
+        encodeJpg(resized, quality: 85),
+      );
 
-      await File('../images/$id-thumbnail.jpeg').writeAsBytes(encodeJpg(thumb, quality: 85));
+      await File('./app/images/users/$id-thumbnail.jpeg').writeAsBytes(
+        encodeJpg(thumb, quality: 85),
+      );
 
       final user = await server.updateUser(id, {
         'image': '$id-image.jpeg',
