@@ -1,2 +1,3 @@
-# social_devs
-An full stack project with Flutter/Dart
+# Social Devs
+
+A full stack project with Flutter/Dart
