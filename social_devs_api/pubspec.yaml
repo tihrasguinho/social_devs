@@ -17,13 +17,17 @@ dependencies:
   postgres: ^2.4.5
   shelf_cors_headers: ^0.1.3
   web_socket_channel: ^2.2.0
+  image: ^3.2.0
 
   custom_environment:
-    path: ../packages/custom_environment
+    git:
+      url: https://github.com/tihrasguinho/social_devs.git
+      path: packages/custom_environment
 
   custom_events:
-    path: ../packages/custom_events  
-  image: ^3.2.0
+    git:
+      url: https://github.com/tihrasguinho/social_devs.git
+      path: packages/custom_events
 
 dev_dependencies:
   lints: ^2.0.0

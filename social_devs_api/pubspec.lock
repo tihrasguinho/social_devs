@@ -53,16 +53,20 @@ packages:
   custom_environment:
     dependency: "direct main"
     description:
-      path: "../packages/custom_environment"
-      relative: true
-    source: path
+      path: "packages/custom_environment"
+      ref: HEAD
+      resolved-ref: "8e62242a3e7ce35f76ae019c87d5b8814db665f6"
+      url: "https://github.com/tihrasguinho/social_devs.git"
+    source: git
     version: "1.0.0"
   custom_events:
     dependency: "direct main"
     description:
-      path: "../packages/custom_events"
-      relative: true
-    source: path
+      path: "packages/custom_events"
+      ref: HEAD
+      resolved-ref: "8e62242a3e7ce35f76ae019c87d5b8814db665f6"
+      url: "https://github.com/tihrasguinho/social_devs.git"
+    source: git
     version: "1.0.0"
   dart_jsonwebtoken:
     dependency: "direct main"

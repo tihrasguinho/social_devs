@@ -2,7 +2,6 @@ FROM dart:stable AS build
 
 WORKDIR /app
 COPY pubspec.* ./
-COPY packages ./packages/
 RUN dart pub get
 
 COPY . .
