@@ -22,12 +22,12 @@ Future<void> sendMessage(WebSocketChannel socket, Event event) async {
     );
 
     if (server.clientExists(event.data['receiver_id'])) {
-      final messages = await server.selectChats(event.data['receiver_id']);
+      final fChats = await server.selectChats(event.data['receiver_id']);
 
-      final chats = Event(
+      final fChatsEvent = Event(
         name: Events.GET_CHATS,
         data: {
-          'messages': messages.map((e) => e.toMap()).toList(),
+          'messages': fChats.map((e) => e.toMap()).toList(),
         },
       );
 
@@ -35,10 +35,23 @@ Future<void> sendMessage(WebSocketChannel socket, Event event) async {
 
       receiver.socket.sink.add(response.toJson());
 
-      receiver.socket.sink.add(chats.toJson());
+      receiver.socket.sink.add(fChatsEvent.toJson());
     }
 
-    return socket.sink.add(response.toJson());
+    final uChats = await server.selectChats(id);
+
+    final uChatsEvent = Event(
+      name: Events.GET_CHATS,
+      data: {
+        'messages': uChats.map((e) => e.toMap()).toList(),
+      },
+    );
+
+    socket.sink.add(uChatsEvent.toJson());
+
+    socket.sink.add(response.toJson());
+
+    return;
   } on ServerException catch (e) {
     final response = Event(
       name: Events.ERROR,

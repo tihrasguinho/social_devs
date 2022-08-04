@@ -35,13 +35,22 @@ class MainModule extends Module {
           child: (_, __) => const MainPage(),
           children: [
             ChildRoute('/home', child: (_, __) => const HomePage()),
-            ChildRoute('/search', child: (_, __) => const SearchPage()),
-            ChildRoute('/profile', child: (_, __) => const ProfilePage()),
+            ChildRoute(
+              '/search',
+              child: (_, __) => const SearchPage(),
+              transition: TransitionType.rightToLeftWithFade,
+            ),
+            ChildRoute(
+              '/profile',
+              child: (_, __) => const ProfilePage(),
+              transition: TransitionType.rightToLeftWithFade,
+            ),
             ChildRoute(
               '/chat/:friendId',
               child: (_, args) => ChatPage(
                 friendId: args.params['friendId'],
               ),
+              transition: TransitionType.rightToLeftWithFade,
             ),
           ],
         ),

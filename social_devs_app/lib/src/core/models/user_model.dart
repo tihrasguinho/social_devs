@@ -8,7 +8,7 @@ class UserModel {
   final String username;
   final String email;
   final String image;
-  final String thumb;
+  final String thumbnail;
   final String createdAt;
 
   UserModel({
@@ -17,7 +17,7 @@ class UserModel {
     required this.username,
     required this.email,
     required this.image,
-    required this.thumb,
+    required this.thumbnail,
     required this.createdAt,
   });
 
@@ -27,7 +27,7 @@ class UserModel {
     String? username,
     String? email,
     String? image,
-    String? thumb,
+    String? thumbnail,
     String? createdAt,
   }) {
     return UserModel(
@@ -36,7 +36,7 @@ class UserModel {
       username: username ?? this.username,
       email: email ?? this.email,
       image: image ?? this.image,
-      thumb: thumb ?? this.thumb,
+      thumbnail: thumbnail ?? this.thumbnail,
       createdAt: createdAt ?? this.createdAt,
     );
   }
@@ -48,7 +48,7 @@ class UserModel {
       'username': username,
       'email': email,
       'image': image,
-      'thumb': thumb,
+      'thumbnail': thumbnail,
       'created_at': createdAt,
     };
   }
@@ -60,7 +60,7 @@ class UserModel {
       username: map['username'] ?? '',
       email: map['email'] ?? '',
       image: map['image'] ?? '',
-      thumb: map['thumb'] ?? '',
+      thumbnail: map['thumbnail'] ?? '',
       createdAt: map['created_at'] ?? '',
     );
   }
@@ -72,7 +72,7 @@ class UserModel {
 
   @override
   String toString() {
-    return 'UserModel(id: $id, name: $name, username: $username, email: $email, image: $image, thumb: $thumb, createdAt: $createdAt)';
+    return 'UserModel(id: $id, name: $name, username: $username, email: $email, image: $image, thumbnail: $thumbnail, createdAt: $createdAt)';
   }
 
   @override
@@ -84,7 +84,7 @@ class UserModel {
         other.username == username &&
         other.email == email &&
         other.image == image &&
-        other.thumb == thumb &&
+        other.thumbnail == thumbnail &&
         other.createdAt == createdAt;
   }
 
@@ -95,7 +95,7 @@ class UserModel {
         username.hashCode ^
         email.hashCode ^
         image.hashCode ^
-        thumb.hashCode ^
+        thumbnail.hashCode ^
         createdAt.hashCode;
   }
 }
@@ -117,7 +117,7 @@ class UserAdapter extends TypeAdapter<UserModel> {
       username: fields[2] as String,
       email: fields[3] as String,
       image: fields[4] as String,
-      thumb: fields[5] as String,
+      thumbnail: fields[5] as String,
       createdAt: fields[6] as String,
     );
   }
@@ -137,7 +137,7 @@ class UserAdapter extends TypeAdapter<UserModel> {
       ..writeByte(4)
       ..write(obj.image)
       ..writeByte(5)
-      ..write(obj.thumb)
+      ..write(obj.thumbnail)
       ..writeByte(6)
       ..write(obj.createdAt);
   }

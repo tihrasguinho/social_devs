@@ -55,17 +55,21 @@ FutureOr<Response> uploadUserImageRoute(Request request) async {
 
       final thumb = copyResizeCropSquare(original, 256);
 
-      await File('./app/images/users/$id-image.jpeg').writeAsBytes(
+      if (!await Directory('./app/images/users/$id').exists()) {
+        await Directory('./app/images/users/$id').create(recursive: true);
+      }
+
+      await File('./app/images/users/$id/image.jpeg').writeAsBytes(
         encodeJpg(resized, quality: 85),
       );
 
-      await File('./app/images/users/$id-thumbnail.jpeg').writeAsBytes(
+      await File('./app/images/users/$id/thumbnail.jpeg').writeAsBytes(
         encodeJpg(thumb, quality: 85),
       );
 
       final user = await server.updateUser(id, {
-        'image': '$id-image.jpeg',
-        'thumbnail': '$id-thumbnail.jpeg',
+        'image': 'image.jpeg',
+        'thumbnail': 'thumbnail.jpeg',
       });
 
       return Response(

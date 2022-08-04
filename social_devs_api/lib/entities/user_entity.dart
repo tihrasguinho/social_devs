@@ -67,8 +67,9 @@ class UserEntity {
       'name': name,
       'username': username,
       'email': email,
-      'image': image.isEmpty ? image : 'http://localhost:5001/users/$image',
-      'thumbnail': thumbnail.isEmpty ? thumbnail : 'http://localhost:5001/users/$thumbnail',
+      'image': image.isEmpty ? image : 'http://192.168.100.67:5001/users/$id/$image',
+      'thumbnail':
+          thumbnail.isEmpty ? thumbnail : 'http://192.168.100.67:5001/users/$id/$thumbnail',
       'created_at': created_at.toString(),
     };
   }

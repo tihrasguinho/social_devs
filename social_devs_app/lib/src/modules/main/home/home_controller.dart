@@ -1,4 +1,5 @@
 import 'package:custom_events/custom_events.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -37,11 +38,11 @@ class HomeController {
     switch (value) {
       case 'Perfil':
         {
-          return Modular.to.navigate('/profile');
+          return kIsWeb ? Modular.to.navigate('/profile') : Modular.to.pushNamed('/profile');
         }
       case 'Procurar':
         {
-          return Modular.to.navigate('/search');
+          return kIsWeb ? Modular.to.navigate('/search') : Modular.to.pushNamed('/search');
         }
       case 'Sair':
         {

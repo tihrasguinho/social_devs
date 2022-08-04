@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:social_devs_app/src/core/models/chat_model.dart';
@@ -49,12 +50,19 @@ class _HomePageState extends State<HomePage> {
                 message: 'Clique para falar com ${friend.name}',
                 waitDuration: const Duration(milliseconds: 500),
                 child: ListTile(
-                  onTap: () => Modular.to.navigate('/chat/${friend.id}'),
+                  onTap: () {
+                    if (kIsWeb) {
+                      Modular.to.navigate('/chat/${friend.id}');
+                    } else {
+                      Modular.to.pushNamed('/chat/${friend.id}');
+                    }
+                  },
                   title: Text(friend.name),
                   subtitle: Text(message.isMe ? '"${message.message}"' : message.message),
                   leading: CircleAvatar(
                     radius: 36,
-                    backgroundImage: friend.thumb.isEmpty ? null : NetworkImage(friend.thumb),
+                    backgroundImage:
+                        friend.thumbnail.isEmpty ? null : NetworkImage(friend.thumbnail),
                   ),
                   trailing: Text(
                     message.time,

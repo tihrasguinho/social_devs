@@ -10,6 +10,8 @@ class AppWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Modular.setObservers([asuka.asukaHeroController]);
 
+    Modular.setInitialRoute('/home');
+
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
       title: 'Social Devs App',

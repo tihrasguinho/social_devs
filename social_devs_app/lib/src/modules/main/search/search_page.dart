@@ -42,7 +42,7 @@ class _SearchPageState extends State<SearchPage> {
                 subtitle: Text('@${user.username}'),
                 leading: CircleAvatar(
                   radius: 32.0,
-                  backgroundImage: user.thumb.isEmpty ? null : NetworkImage(user.thumb),
+                  backgroundImage: user.thumbnail.isEmpty ? null : NetworkImage(user.thumbnail),
                 ),
                 trailing: IconButton(
                   onPressed: () => controller.sendFriendRequest(user.id),

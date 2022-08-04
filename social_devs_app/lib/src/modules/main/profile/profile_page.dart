@@ -48,7 +48,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                   CircleAvatar(
                     radius: 36,
-                    backgroundImage: user.thumb.isEmpty ? null : NetworkImage(user.thumb),
+                    backgroundImage: user.thumbnail.isEmpty ? null : NetworkImage(user.thumbnail),
                   ),
                   const SizedBox(height: 8.0),
                   Text(
@@ -89,7 +89,8 @@ class _ProfilePageState extends State<ProfilePage> {
                         title: Text(e.user.name),
                         subtitle: Text('@${e.user.username}'),
                         leading: CircleAvatar(
-                          backgroundImage: e.user.thumb.isEmpty ? null : NetworkImage(e.user.thumb),
+                          backgroundImage:
+                              e.user.thumbnail.isEmpty ? null : NetworkImage(e.user.thumbnail),
                         ),
                         trailing: IconButton(
                           onPressed: () async {
@@ -140,14 +141,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   ...list.values.take(5).map((e) {
                     return ListTile(
                       onTap: () {
-                        if (kDebugMode) print('listTile');
-
-                        Modular.to.navigate('/chat/${e.id}', arguments: e.id);
+                        if (kIsWeb) {
+                          Modular.to.navigate('/chat/${e.id}');
+                        } else {
+                          Modular.to.pushNamed('/chat/${e.id}');
+                        }
                       },
                       title: Text(e.name),
                       subtitle: Text('@${e.username}'),
                       leading: CircleAvatar(
-                        backgroundImage: e.thumb.isEmpty ? null : NetworkImage(e.thumb),
+                        backgroundImage: e.thumbnail.isEmpty ? null : NetworkImage(e.thumbnail),
                       ),
                     );
                   }).toList(),
