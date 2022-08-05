@@ -12,8 +12,11 @@ import 'home/home_page.dart';
 import 'profile/profile_controller.dart';
 import 'profile/profile_page.dart';
 
-import 'search/search_controller.dart';
+import 'profile/profile_repository.dart';
 import 'search/search_page.dart';
+import 'search/search_controller.dart';
+import 'search/search_repository.dart';
+import 'search/search_bloc.dart';
 
 class MainModule extends Module {
   @override
@@ -23,9 +26,18 @@ class MainModule extends Module {
           onDispose: (controller) => controller.dispose(),
         ),
         Bind.factory<HomeController>((i) => HomeController()),
-        Bind.factory<ProfileController>((i) => ProfileController(i())),
-        Bind.factory<SearchController>((i) => SearchController(i())),
+        Bind.factory<ProfileController>((i) => ProfileController(i(), i())),
+        Bind.factory<SearchController>((i) => SearchController(i(), i())),
         Bind.factory<ChatController>((i) => ChatController()),
+
+        // Profile
+
+        Bind.factory<ProfileRepository>((i) => ProfileRepository(i())),
+
+        // SearchPage
+
+        Bind.factory<SearchRepository>((i) => SearchRepository(i())),
+        Bind.lazySingleton<SearchBloc>((i) => SearchBloc(i())),
       ];
 
   @override

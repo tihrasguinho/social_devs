@@ -46,9 +46,12 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: double.infinity,
                     height: 24.0,
                   ),
-                  CircleAvatar(
-                    radius: 36,
-                    backgroundImage: user.thumbnail.isEmpty ? null : NetworkImage(user.thumbnail),
+                  InkWell(
+                    onTap: () => controller.changePhoto().then((value) => setState(() {})),
+                    child: CircleAvatar(
+                      radius: 36,
+                      backgroundImage: user.thumbnail.isEmpty ? null : NetworkImage(user.thumbnail),
+                    ),
                   ),
                   const SizedBox(height: 8.0),
                   Text(

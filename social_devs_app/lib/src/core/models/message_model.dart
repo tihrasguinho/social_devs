@@ -30,6 +30,8 @@ class MessageModel {
     return senderId == user.id;
   }
 
+  bool get isImage => type == 'image';
+
   String get time {
     final date = DateTime.fromMillisecondsSinceEpoch(createdAt);
     return DateFormat('HH:mm').format(date);

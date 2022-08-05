@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:social_devs_api/others/server_repository.dart';
+
 class UserEntity {
   final String id;
   final String name;
@@ -62,14 +64,15 @@ class UserEntity {
   }
 
   Map<String, dynamic> toPublicMap() {
+    final server = ServerRepository.instance;
+
     return <String, dynamic>{
       'id': id,
       'name': name,
       'username': username,
       'email': email,
-      'image': image.isEmpty ? image : 'http://192.168.100.67:5001/users/$id/$image',
-      'thumbnail':
-          thumbnail.isEmpty ? thumbnail : 'http://192.168.100.67:5001/users/$id/$thumbnail',
+      'image': image.isEmpty ? image : '${server.host}/users/$id/$image',
+      'thumbnail': thumbnail.isEmpty ? thumbnail : '${server.host}/users/$id/$thumbnail',
       'created_at': created_at.toString(),
     };
   }

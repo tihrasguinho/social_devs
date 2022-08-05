@@ -1,12 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:custom_environment/custom_environment.dart';
+import 'package:dart_ipify/dart_ipify.dart';
 import 'package:postgres/postgres.dart';
 import 'package:social_devs_api/entities/client_entity.dart';
 import 'package:social_devs_api/entities/friend_request_entity.dart';
 import 'package:social_devs_api/entities/message_entity.dart';
 import 'package:social_devs_api/entities/user_entity.dart';
 import 'package:social_devs_api/exceptions/server_exception.dart';
+import 'package:social_devs_api/others/server_consts.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ServerRepository {
@@ -14,12 +17,42 @@ class ServerRepository {
 
   static List<ClientEntity>? _clients;
 
+  static String? _host;
+
+  String get host => _host ?? 'http://localhost:5001';
+
   ServerRepository._();
 
   static ServerRepository get instance => ServerRepository._();
 
   static Future<void> init() async {
     final env = CustomEnvironment.instance;
+
+    // if (kDebugMode) {
+    //   final list = await NetworkInterface.list();
+
+    //   if (list.any((e) => e.name == 'Ethernet')) {
+    //     final ethernet = list.singleWhere((e) => e.name == 'Ethernet');
+
+    //     if (ethernet.addresses.any((e) => e.type == InternetAddressType.IPv4)) {
+    //       final ipv4 = ethernet.addresses.singleWhere((e) => e.type == InternetAddressType.IPv4);
+    //       _host = 'http://${ipv4.address}:5001';
+    //     }
+    //   }
+    // } else {
+    //   _host = 'http://${await Ipify.ipv4()}:5001';
+    // }
+
+    final list = await NetworkInterface.list();
+
+    if (list.any((e) => e.name == 'Ethernet')) {
+      final ethernet = list.singleWhere((e) => e.name == 'Ethernet');
+
+      if (ethernet.addresses.any((e) => e.type == InternetAddressType.IPv4)) {
+        final ipv4 = ethernet.addresses.singleWhere((e) => e.type == InternetAddressType.IPv4);
+        _host = 'http://${ipv4.address}:5001';
+      }
+    }
 
     _clients ??= <ClientEntity>[];
 
@@ -140,8 +173,8 @@ class ServerRepository {
 
       final select = await _connection!.mappedResultsQuery(
         params != null && queries.isNotEmpty
-            ? 'select * from tb_users where ${queries.join(' and ')} order by created_at'
-            : 'select * from tb_users order by created_at',
+            ? 'select * from tb_users where ${queries.join(' and ')} order by created_at desc'
+            : 'select * from tb_users order by created_at desc',
         substitutionValues: params,
       );
 

@@ -58,7 +58,27 @@ class _HomePageState extends State<HomePage> {
                     }
                   },
                   title: Text(friend.name),
-                  subtitle: Text(message.isMe ? '"${message.message}"' : message.message),
+                  subtitle: message.isImage
+                      ? Row(
+                          children: [
+                            const Icon(Icons.image, size: 16),
+                            const SizedBox(width: 4.0),
+                            const Text('Imagem'),
+                            const SizedBox(width: 4.0),
+                            message.isMe
+                                ? const Icon(Icons.check_circle_outline_rounded, size: 16)
+                                : const SizedBox()
+                          ],
+                        )
+                      : Row(
+                          children: [
+                            Text(message.isMe ? '"${message.message}"' : message.message),
+                            const SizedBox(width: 4.0),
+                            message.isMe
+                                ? const Icon(Icons.check_circle_outline_rounded, size: 16)
+                                : const SizedBox()
+                          ],
+                        ),
                   leading: CircleAvatar(
                     radius: 36,
                     backgroundImage:

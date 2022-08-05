@@ -38,7 +38,9 @@ FutureOr<Response> queryUsersRoute(Request request) async {
         {
           'message': 'Listing users!',
           'page': page,
-          'users': pages[page - 1].map((e) => e.toPublicMap()).toList(),
+          'users': users.isEmpty
+              ? []
+              : pages[users.isEmpty ? 1 : page - 1].map((e) => e.toPublicMap()).toList(),
         },
       ),
     );

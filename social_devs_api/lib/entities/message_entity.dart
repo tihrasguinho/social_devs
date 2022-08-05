@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:social_devs_api/others/server_repository.dart';
+
 class MessageEntity {
   final String id;
   final String message;
@@ -40,9 +42,13 @@ class MessageEntity {
   }
 
   Map<String, dynamic> toMap() {
+    final server = ServerRepository.instance;
+
+    final $message = type == 'image' ? '${server.host}/messages/$message' : message;
+
     return <String, dynamic>{
       'id': id,
-      'message': message,
+      'message': $message,
       'type': type,
       'sender_id': sender_id,
       'receiver_id': receiver_id,

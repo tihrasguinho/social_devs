@@ -6,10 +6,13 @@ import 'package:social_devs_app/src/core/others/custom_uno.dart';
 import 'package:asuka/asuka.dart' as asuka;
 import 'package:uno/uno.dart';
 
+import 'profile_repository.dart';
+
 class ProfileController {
   final CustomUno _customUno;
+  final ProfileRepository _repository;
 
-  ProfileController(this._customUno);
+  ProfileController(this._customUno, this._repository);
 
   final friends = Hive.box<UserModel>('friends');
 
@@ -77,5 +80,9 @@ class ProfileController {
     } on Exception catch (e) {
       return asuka.AsukaSnackbar.alert(e.toString()).show();
     }
+  }
+
+  Future changePhoto() async {
+    await _repository.changePhoto();
   }
 }

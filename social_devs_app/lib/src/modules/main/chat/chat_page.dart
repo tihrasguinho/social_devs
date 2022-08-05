@@ -44,7 +44,16 @@ class _ChatPageState extends State<ChatPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(friend.name),
+        title: Row(
+          children: [
+            CircleAvatar(
+              radius: 18,
+              backgroundImage: friend.thumbnail.isEmpty ? null : NetworkImage(friend.thumbnail),
+            ),
+            const SizedBox(width: 8.0),
+            Text(friend.name),
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -66,34 +75,65 @@ class _ChatPageState extends State<ChatPage> {
                         bottom: 4.0,
                         top: 4.0,
                       ),
-                      padding: const BubbleEdges.only(
-                        left: 16.0,
-                        right: 16.0,
-                        bottom: 8.0,
-                        top: 12.0,
-                      ),
+                      padding: model.isImage
+                          ? null
+                          : const BubbleEdges.only(
+                              left: 16.0,
+                              right: 16.0,
+                              bottom: 8.0,
+                              top: 12.0,
+                            ),
                       alignment: model.isMe ? Alignment.centerRight : Alignment.centerLeft,
                       nip: model.isMe ? BubbleNip.rightBottom : BubbleNip.leftBottom,
                       radius: const Radius.circular(16.0),
                       elevation: 2,
                       color: model.isMe ? Theme.of(context).primaryColor : Colors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            model.message,
-                            style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                  color: model.isMe ? Colors.white : Colors.black,
-                                ),
-                          ),
-                          Text(
-                            model.time,
-                            style: Theme.of(context).textTheme.overline!.copyWith(
-                                  color: model.isMe ? Colors.white60 : Colors.black54,
-                                ),
-                          ),
-                        ],
+                      style: const BubbleStyle(
+                        padding: BubbleEdges.all(0.0),
                       ),
+                      child: model.isImage
+                          ? Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Material(
+                                  clipBehavior: Clip.antiAlias,
+                                  borderRadius: BorderRadius.circular(16.0),
+                                  child: Image.network(
+                                    model.message,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    right: 16.0,
+                                    bottom: 8.0,
+                                    top: 8.0,
+                                  ),
+                                  child: Text(
+                                    model.time,
+                                    style: Theme.of(context).textTheme.overline!.copyWith(
+                                          color: model.isMe ? Colors.white60 : Colors.black54,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Text(
+                                  model.message,
+                                  style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                        color: model.isMe ? Colors.white : Colors.black,
+                                      ),
+                                ),
+                                Text(
+                                  model.time,
+                                  style: Theme.of(context).textTheme.overline!.copyWith(
+                                        color: model.isMe ? Colors.white60 : Colors.black54,
+                                      ),
+                                ),
+                              ],
+                            ),
                     );
                   },
                 );
@@ -115,6 +155,13 @@ class _ChatPageState extends State<ChatPage> {
                       hintText: 'Escreva algo...',
                       border: InputBorder.none,
                     ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => controller.sendImage(friend.id),
+                  icon: Transform.rotate(
+                    angle: 0,
+                    child: const Icon(Icons.attach_file),
                   ),
                 ),
                 IconButton(

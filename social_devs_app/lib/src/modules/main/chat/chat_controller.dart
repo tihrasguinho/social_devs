@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:custom_events/custom_events.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:social_devs_app/src/core/models/message_model.dart';
 import 'package:social_devs_app/src/core/models/user_model.dart';
 import 'package:social_devs_app/src/modules/main/main_controller.dart';
@@ -9,6 +12,8 @@ import 'package:social_devs_app/src/modules/main/main_controller.dart';
 class ChatController {
   final friends = Hive.box<UserModel>('friends');
   final app = Hive.box('app');
+
+  final picker = ImagePicker();
 
   final input = TextEditingController();
 
@@ -34,6 +39,30 @@ class ChatController {
 
   UserModel getFriend(String id) {
     return friends.get(id)!;
+  }
+
+  void sendImage(String friendId) async {
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile == null) {
+      return;
+    }
+
+    final bytes = await pickedFile.readAsBytes();
+
+    final encoded = base64Encode(bytes);
+
+    final event = Event(
+      name: Events.SEND_MESSAGE,
+      data: {
+        'image': encoded,
+        'type': 'image',
+        'receiver_id': friendId,
+        'token': 'Bearer ${app.get('access_token')}',
+      },
+    );
+
+    Modular.get<MainController>().sendEvent(event);
   }
 
   void sendMessage(String friendId) async {

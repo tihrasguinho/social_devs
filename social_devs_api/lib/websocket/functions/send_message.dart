@@ -1,6 +1,11 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:custom_events/custom_events.dart';
+import 'package:image/image.dart';
 import 'package:social_devs_api/exceptions/server_exception.dart';
 import 'package:social_devs_api/others/jwt_builder.dart';
+import 'package:social_devs_api/others/server_consts.dart';
 import 'package:social_devs_api/others/server_repository.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
@@ -10,7 +15,60 @@ Future<void> sendMessage(WebSocketChannel socket, Event event) async {
 
     final id = JwtBuilder.verify(event.data['token']);
 
-    await server.insertMessage({...event.data, 'sender_id': id});
+    if (event.data['type'] == 'image') {
+      final path = kDebugMode ? '../images/messages' : './app/images/messages';
+      final encoded = event.data['image'] as String;
+      final image = base64Decode(encoded);
+
+      if (image.isEmpty) {
+        final error = Event(
+          name: Events.ERROR,
+          data: {
+            'error': 'Falha ao carregar a imagem!',
+          },
+        );
+
+        return socket.sink.add(error.toJson());
+      }
+
+      final inKB = image.lengthInBytes / 1024;
+      final inMB = inKB / 1024;
+
+      if (inMB > 2.0) {
+        final error = Event(
+          name: Events.ERROR,
+          data: {
+            'error': 'Tamanho máximo permitido é de 2Mb!',
+          },
+        );
+
+        return socket.sink.add(error.toJson());
+      }
+
+      final decoded = decodeImage(image)!;
+
+      if (!await Directory(path).exists()) {
+        await Directory(path).create(recursive: true);
+      }
+
+      final now = DateTime.now().toUtc().millisecondsSinceEpoch;
+      final filename = '$now-$id.jpeg';
+
+      await File('$path/$filename').writeAsBytes(
+        encodeJpg(decoded, quality: 85),
+      );
+
+      final values = {
+        'message': filename,
+        'type': 'image',
+        'sender_id': id,
+        'receiver_id': event.data['receiver_id'],
+      };
+
+      await server.insertMessage(values);
+    } else {
+      await server.insertMessage({...event.data, 'sender_id': id});
+    }
 
     final messages = await server.selectMessages(id, event.data['receiver_id']);
 
