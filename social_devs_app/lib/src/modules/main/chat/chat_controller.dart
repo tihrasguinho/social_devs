@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:social_devs_app/src/core/models/user_model.dart';
+import 'package:social_devs_app/src/core/widgets/video_view_widget.dart';
 
 import 'chat_repository.dart';
 
@@ -63,5 +64,36 @@ class ChatController {
     final video = await pickedFile.readAsBytes();
 
     await _repository.sendVideoMessage(video, name, friendId);
+  }
+
+  // ? PopUP Image
+
+  void openImage(String url) async {
+    await asuka.showDialog(
+      barrierColor: Colors.black38,
+      builder: (context) {
+        return Dialog(
+          clipBehavior: Clip.antiAlias,
+          child: Image.network(
+            url,
+            fit: BoxFit.cover,
+          ),
+        );
+      },
+    );
+  }
+
+  // ? PopUP Video
+
+  void openVideo(String url) async {
+    await asuka.showDialog(
+      barrierColor: Colors.black38,
+      builder: (context) {
+        return Dialog(
+          clipBehavior: Clip.antiAlias,
+          child: VideoViewWidget(url: url),
+        );
+      },
+    );
   }
 }

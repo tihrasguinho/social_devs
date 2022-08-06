@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:social_devs_app/src/core/models/user_model.dart';
+import 'package:social_devs_app/src/core/repositories/friends_repository.dart';
 import 'package:uno/uno.dart';
 import 'package:social_devs_app/src/core/others/custom_uno.dart';
 import 'package:asuka/asuka.dart' as asuka;
 
 class SigninController {
   final CustomUno _customUno;
+  final FriendsRepository _repository;
 
-  SigninController(this._customUno);
+  SigninController(this._customUno, this._repository);
 
   final email = TextEditingController();
   final password = TextEditingController();
@@ -46,6 +48,8 @@ class SigninController {
       await app.put('user', user.toJson());
       await app.put('access_token', response.data['access_token']);
       await app.put('refresh_token', response.data['refresh_token']);
+
+      await _repository.getFriends();
 
       entry.remove();
 

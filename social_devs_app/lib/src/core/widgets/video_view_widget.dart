@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:video_thumbnail_imageview/video_thumbnail_imageview.dart';
 
 class VideoViewWidget extends StatefulWidget {
   const VideoViewWidget({Key? key, required this.url}) : super(key: key);
@@ -36,14 +37,19 @@ class _VideoViewWidgetState extends State<VideoViewWidget> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxWidth: 196.0,
-          ),
-          child: AspectRatio(
-            aspectRatio: controller.value.aspectRatio,
-            child: VideoPlayer(controller),
-          ),
+        VTImageView(
+          videoUrl: widget.url,
+          assetPlaceHolder: 'assetPlaceHolder',
+          errorBuilder: (context, error, stack) {
+            return Container(
+              width: 200.0,
+              height: 200.0,
+              color: Colors.blue,
+              child: const Center(
+                child: Text("Image Loading Error"),
+              ),
+            );
+          },
         ),
         Positioned.fill(
           child: AnimatedBuilder(

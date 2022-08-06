@@ -8,7 +8,7 @@ import 'signup/signup_page.dart';
 class AuthModule extends Module {
   @override
   List<Bind> get binds => [
-        Bind.factory<SigninController>((i) => SigninController(i())),
+        Bind.factory<SigninController>((i) => SigninController(i(), i())),
       ];
 
   @override

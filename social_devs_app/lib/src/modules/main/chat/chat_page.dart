@@ -35,6 +35,8 @@ class _ChatPageState extends State<ChatPage> {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -67,8 +69,8 @@ class _ChatPageState extends State<ChatPage> {
 
                     return Bubble(
                       margin: BubbleEdges.only(
-                        right: model.isMe ? 16.0 : 128.0,
-                        left: model.isMe ? 128.0 : 16.0,
+                        right: model.isMe ? 16.0 : width * 0.35,
+                        left: model.isMe ? width * 0.35 : 16.0,
                         bottom: 4.0,
                         top: 4.0,
                       ),
@@ -88,17 +90,13 @@ class _ChatPageState extends State<ChatPage> {
                       style: const BubbleStyle(
                         padding: BubbleEdges.all(0.0),
                       ),
-                      child: model.isImage
-                          ? ConstrainedBox(
-                              constraints: const BoxConstraints(
-                                maxWidth: 196.0,
-                              ),
-                              child: Material(
-                                clipBehavior: Clip.antiAlias,
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(16.0),
-                                  topRight: Radius.circular(16.0),
-                                ),
+                      child: ConstrainedBox(
+                        constraints: const BoxConstraints(
+                          maxWidth: 512.0,
+                        ),
+                        child: model.isImage
+                            ? InkWell(
+                                onTap: () => controller.openImage(model.message),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.end,
                                   children: [
@@ -120,52 +118,56 @@ class _ChatPageState extends State<ChatPage> {
                                     ),
                                   ],
                                 ),
-                              ),
-                            )
-                          : model.isVideo
-                              ? Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Material(
-                                      clipBehavior: Clip.antiAlias,
-                                      borderRadius: const BorderRadius.only(
-                                        topLeft: Radius.circular(16.0),
-                                        topRight: Radius.circular(16.0),
-                                      ),
-                                      child: VideoViewWidget(url: model.message),
+                              )
+                            : model.isVideo
+                                ? InkWell(
+                                    onTap: () => controller.openVideo(model.message),
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.end,
+                                      children: [
+                                        Material(
+                                          clipBehavior: Clip.antiAlias,
+                                          borderRadius: const BorderRadius.only(
+                                            topLeft: Radius.circular(16.0),
+                                            topRight: Radius.circular(16.0),
+                                          ),
+                                          child: VideoViewWidget(url: model.message),
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.only(
+                                            right: 16.0,
+                                            bottom: 8.0,
+                                            top: 8.0,
+                                          ),
+                                          child: Text(
+                                            model.time,
+                                            style: Theme.of(context).textTheme.overline!.copyWith(
+                                                  color:
+                                                      model.isMe ? Colors.white60 : Colors.black54,
+                                                ),
+                                          ),
+                                        ),
+                                      ],
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(
-                                        right: 16.0,
-                                        bottom: 8.0,
-                                        top: 8.0,
+                                  )
+                                : Column(
+                                    crossAxisAlignment: CrossAxisAlignment.end,
+                                    children: [
+                                      Text(
+                                        model.message,
+                                        style: Theme.of(context).textTheme.subtitle1!.copyWith(
+                                              color: model.isMe ? Colors.white : Colors.black,
+                                            ),
                                       ),
-                                      child: Text(
+                                      Text(
                                         model.time,
                                         style: Theme.of(context).textTheme.overline!.copyWith(
                                               color: model.isMe ? Colors.white60 : Colors.black54,
                                             ),
                                       ),
-                                    ),
-                                  ],
-                                )
-                              : Column(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
-                                  children: [
-                                    Text(
-                                      model.message,
-                                      style: Theme.of(context).textTheme.subtitle1!.copyWith(
-                                            color: model.isMe ? Colors.white : Colors.black,
-                                          ),
-                                    ),
-                                    Text(
-                                      model.time,
-                                      style: Theme.of(context).textTheme.overline!.copyWith(
-                                            color: model.isMe ? Colors.white60 : Colors.black54,
-                                          ),
-                                    ),
-                                  ],
-                                ),
+                                    ],
+                                  ),
+                      ),
                     );
                   },
                 );
