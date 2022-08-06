@@ -44,7 +44,11 @@ class MessageEntity {
   Map<String, dynamic> toMap() {
     final server = ServerRepository.instance;
 
-    final $message = type == 'image' ? '${server.host}/messages/$message' : message;
+    final $message = type == 'image'
+        ? '${server.host}/messages/$message'
+        : type == 'video'
+            ? '${server.host}/messages/$message'
+            : message;
 
     return <String, dynamic>{
       'id': id,

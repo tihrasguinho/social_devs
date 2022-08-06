@@ -32,6 +32,8 @@ class MessageModel {
 
   bool get isImage => type == 'image';
 
+  bool get isVideo => type == 'video';
+
   String get time {
     final date = DateTime.fromMillisecondsSinceEpoch(createdAt);
     return DateFormat('HH:mm').format(date);

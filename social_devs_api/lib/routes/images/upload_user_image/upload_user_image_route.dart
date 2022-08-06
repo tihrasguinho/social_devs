@@ -7,11 +7,14 @@ import 'package:image/image.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_multipart/form_data.dart';
 import 'package:social_devs_api/exceptions/server_exception.dart';
+import 'package:social_devs_api/others/server_consts.dart';
 import 'package:social_devs_api/others/server_repository.dart';
 
 FutureOr<Response> uploadUserImageRoute(Request request) async {
   try {
     if (request.isMultipartForm) {
+      final path = kDebugMode ? '../data/users' : './app/data/users';
+
       final server = ServerRepository.instance;
 
       final id = request.context['id'] as String;
@@ -55,15 +58,15 @@ FutureOr<Response> uploadUserImageRoute(Request request) async {
 
       final thumb = copyResizeCropSquare(original, 256);
 
-      if (!await Directory('./app/images/users/$id').exists()) {
-        await Directory('./app/images/users/$id').create(recursive: true);
+      if (!await Directory('$path/$id').exists()) {
+        await Directory('$path/$id').create(recursive: true);
       }
 
-      await File('./app/images/users/$id/image.jpeg').writeAsBytes(
+      await File('$path/$id/image.jpeg').writeAsBytes(
         encodeJpg(resized, quality: 85),
       );
 
-      await File('./app/images/users/$id/thumbnail.jpeg').writeAsBytes(
+      await File('$path/$id/thumbnail.jpeg').writeAsBytes(
         encodeJpg(thumb, quality: 85),
       );
 

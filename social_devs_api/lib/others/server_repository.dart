@@ -2,14 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:custom_environment/custom_environment.dart';
-import 'package:dart_ipify/dart_ipify.dart';
 import 'package:postgres/postgres.dart';
 import 'package:social_devs_api/entities/client_entity.dart';
 import 'package:social_devs_api/entities/friend_request_entity.dart';
 import 'package:social_devs_api/entities/message_entity.dart';
 import 'package:social_devs_api/entities/user_entity.dart';
 import 'package:social_devs_api/exceptions/server_exception.dart';
-import 'package:social_devs_api/others/server_consts.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class ServerRepository {
@@ -365,22 +363,34 @@ where user_id = @id;
   // Messages
 
   Future<void> insertMessage(Map<String, dynamic> values) async {
-    await _connection!.mappedResultsQuery(
-      'insert into tb_messages (message, type, sender_id, receiver_id) values (@message, @type, @sender_id, @receiver_id) returning *',
-      substitutionValues: values,
-    );
+    try {
+      await _connection!.mappedResultsQuery(
+        'insert into tb_messages (message, type, sender_id, receiver_id) values (@message, @type, @sender_id, @receiver_id) returning *',
+        substitutionValues: values,
+      );
+    } on PostgreSQLException catch (e) {
+      throw ServerException(400, e.message ?? '');
+    } on Exception catch (e) {
+      throw ServerException(500, e.toString());
+    }
   }
 
   Future<List<MessageEntity>> selectMessages(String senderId, String receiverId) async {
-    final select = await _connection!.mappedResultsQuery(
-      'select * from tb_messages where (sender_id = @sender_id and receiver_id = @receiver_id) or (sender_id = @receiver_id and receiver_id = @sender_id) order by created_at desc',
-      substitutionValues: {
-        'sender_id': senderId,
-        'receiver_id': receiverId,
-      },
-    );
+    try {
+      final select = await _connection!.mappedResultsQuery(
+        'select * from tb_messages where (sender_id = @sender_id and receiver_id = @receiver_id) or (sender_id = @receiver_id and receiver_id = @sender_id) order by created_at desc',
+        substitutionValues: {
+          'sender_id': senderId,
+          'receiver_id': receiverId,
+        },
+      );
 
-    return select.map((e) => MessageEntity.fromMap(e['tb_messages']!)).toList();
+      return select.map((e) => MessageEntity.fromMap(e['tb_messages']!)).toList();
+    } on PostgreSQLException catch (e) {
+      throw ServerException(400, e.message ?? '');
+    } on Exception catch (e) {
+      throw ServerException(500, e.toString());
+    }
   }
 
   Future<List<MessageEntity>> selectChats(String userId) async {

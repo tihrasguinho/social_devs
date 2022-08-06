@@ -16,6 +16,8 @@ Future<void> sendMessage(WebSocketChannel socket, Event event) async {
     final id = JwtBuilder.verify(event.data['token']);
 
     if (event.data['type'] == 'image') {
+      // ? CODE PARTE FOR IMAGE MESSAGES --- * --- * --- *
+
       final path = kDebugMode ? '../images/messages' : './app/images/messages';
       final encoded = event.data['image'] as String;
       final image = base64Decode(encoded);
@@ -67,6 +69,8 @@ Future<void> sendMessage(WebSocketChannel socket, Event event) async {
 
       await server.insertMessage(values);
     } else {
+      // ? CODE PART FOR TEXT MESSAGES --- * --- * --- *
+
       await server.insertMessage({...event.data, 'sender_id': id});
     }
 

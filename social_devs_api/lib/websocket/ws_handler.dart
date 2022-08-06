@@ -6,7 +6,6 @@ import 'package:social_devs_api/others/server_repository.dart';
 import 'package:social_devs_api/websocket/functions/get_chats.dart';
 import 'package:social_devs_api/websocket/functions/get_messages.dart';
 import 'package:social_devs_api/websocket/functions/register_user.dart';
-import 'package:social_devs_api/websocket/functions/send_message.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 Handler get wsHandler {
@@ -28,7 +27,6 @@ Handler get wsHandler {
 
                 break;
               }
-
             case Events.GET_MESSAGES:
               {
                 await getMessages(socket, event);
@@ -38,12 +36,6 @@ Handler get wsHandler {
             case Events.GET_CHATS:
               {
                 await getChats(socket, event);
-
-                break;
-              }
-            case Events.SEND_MESSAGE:
-              {
-                await sendMessage(socket, event);
 
                 break;
               }

@@ -58,12 +58,15 @@ class _HomePageState extends State<HomePage> {
                     }
                   },
                   title: Text(friend.name),
-                  subtitle: message.isImage
+                  subtitle: message.isImage || message.isVideo
                       ? Row(
                           children: [
-                            const Icon(Icons.image, size: 16),
+                            Icon(
+                              message.isImage ? Icons.image : Icons.video_collection_rounded,
+                              size: 16,
+                            ),
                             const SizedBox(width: 4.0),
-                            const Text('Imagem'),
+                            Text(message.isImage ? 'Imagem' : 'Video'),
                             const SizedBox(width: 4.0),
                             message.isMe
                                 ? const Icon(Icons.check_circle_outline_rounded, size: 16)

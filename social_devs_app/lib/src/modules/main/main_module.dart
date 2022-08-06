@@ -1,5 +1,7 @@
 import 'package:flutter_modular/flutter_modular.dart';
 
+import 'chat/bloc/chat_bloc.dart';
+import 'chat/chat_repository.dart';
 import 'main_controller.dart';
 import 'main_page.dart';
 
@@ -28,16 +30,21 @@ class MainModule extends Module {
         Bind.factory<HomeController>((i) => HomeController()),
         Bind.factory<ProfileController>((i) => ProfileController(i(), i())),
         Bind.factory<SearchController>((i) => SearchController(i(), i())),
-        Bind.factory<ChatController>((i) => ChatController()),
 
-        // Profile
+        // * ProfilePage
 
         Bind.factory<ProfileRepository>((i) => ProfileRepository(i())),
 
-        // SearchPage
+        // * SearchPage
 
         Bind.factory<SearchRepository>((i) => SearchRepository(i())),
         Bind.lazySingleton<SearchBloc>((i) => SearchBloc(i())),
+
+        // * ChatPage
+
+        Bind.factory((i) => ChatRepository(i())),
+        Bind.factory<ChatController>((i) => ChatController(i())),
+        Bind.lazySingleton<ChatBloc>((i) => ChatBloc(i(), i())),
       ];
 
   @override

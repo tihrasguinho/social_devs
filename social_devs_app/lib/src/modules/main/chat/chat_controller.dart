@@ -1,85 +1,67 @@
-import 'dart:convert';
-
-import 'package:custom_events/custom_events.dart';
+import 'package:asuka/asuka.dart' as asuka;
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:social_devs_app/src/core/models/message_model.dart';
 import 'package:social_devs_app/src/core/models/user_model.dart';
-import 'package:social_devs_app/src/modules/main/main_controller.dart';
+
+import 'chat_repository.dart';
 
 class ChatController {
+  final ChatRepository _repository;
+
   final friends = Hive.box<UserModel>('friends');
+
   final app = Hive.box('app');
 
   final picker = ImagePicker();
 
   final input = TextEditingController();
 
-  final messagesNotifier = ValueNotifier<List<MessageModel>>([]);
-
-  List<MessageModel> get messages => messagesNotifier.value;
-
-  void setMessages(List<MessageModel> msgs) {
-    messagesNotifier.value = msgs;
-  }
-
-  ChatController() {
-    Modular.get<MainController>().socket.listen((message) {
-      final event = Event.fromJson(message);
-
-      if (event.name == Events.GET_MESSAGES) {
-        final list = event.data['messages'] as List;
-
-        setMessages(list.map((e) => MessageModel.fromMap(e)).toList());
-      }
-    });
-  }
+  ChatController(this._repository);
 
   UserModel getFriend(String id) {
     return friends.get(id)!;
   }
 
-  void sendImage(String friendId) async {
+  // ? Send TEXT message
+
+  void sendTextMessage(String friendId) async {
+    if (input.text.isEmpty) return;
+
+    await _repository.sendTextMessage(input.text, friendId);
+
+    input.clear();
+  }
+
+  // ? Send IMAGE message
+
+  void sendImageMessage(String friendId) async {
     final pickedFile = await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile == null) {
-      return;
+      return asuka.AsukaSnackbar.warning('Falha ao carregar imagem!').show();
     }
 
-    final bytes = await pickedFile.readAsBytes();
+    final name = pickedFile.name;
 
-    final encoded = base64Encode(bytes);
+    final image = await pickedFile.readAsBytes();
 
-    final event = Event(
-      name: Events.SEND_MESSAGE,
-      data: {
-        'image': encoded,
-        'type': 'image',
-        'receiver_id': friendId,
-        'token': 'Bearer ${app.get('access_token')}',
-      },
-    );
-
-    Modular.get<MainController>().sendEvent(event);
+    await _repository.sendImageMessage(image, name, friendId);
   }
 
-  void sendMessage(String friendId) async {
-    if (input.text.isEmpty) return;
+  // ? Send VIDEO message
 
-    final event = Event(
-      name: Events.SEND_MESSAGE,
-      data: {
-        'receiver_id': friendId,
-        'message': input.text,
-        'type': 'text',
-        'token': 'Bearer ${app.get('access_token')}',
-      },
-    );
+  void sendVideoMessage(String friendId) async {
+    final pickedFile = await picker.pickVideo(source: ImageSource.gallery);
 
-    Modular.get<MainController>().sendEvent(event);
+    if (pickedFile == null) {
+      return asuka.AsukaSnackbar.warning('Falha ao carregar imagem!').show();
+    }
 
-    input.clear();
+    final name = pickedFile.name;
+
+    final video = await pickedFile.readAsBytes();
+
+    await _repository.sendVideoMessage(video, name, friendId);
   }
 }
