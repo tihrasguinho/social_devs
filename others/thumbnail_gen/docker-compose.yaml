@@ -1,6 +1,0 @@
-services:
-  thumbnail-gen:
-    image: dart-server-thumbnail-gen
-    restart: always
-    ports:
-      - "8080:8080"
